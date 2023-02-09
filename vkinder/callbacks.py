@@ -142,14 +142,12 @@ async def next_user(event: MessageEvent):
 
 @callback_labeler.raw_event(GroupEventType.MESSAGE_EVENT, MessageEvent, PayloadRule({'cmd': 'like'}))
 async def like_user(event: MessageEvent):
-    # Processing of the likes, "change the message"
     liked_user_id = event.object.payload.get('user_id')
     liked_users = await api.users.get(liked_user_id, fields=USER_DATA_FIELDS)
     liked_user = liked_users[0]
     await message_processing(liked_user, message=event, liked=True)
     add_like(event.user_id, liked_user_id)
 
-    # Sending a new message
     user = get_user(event.user_id)
     found_users = await search_users(user)
     if not found_users:
